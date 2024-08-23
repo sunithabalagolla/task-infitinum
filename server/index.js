@@ -33,7 +33,7 @@ app.get('/', (req,res)=>{
     })
 })
 
-mongoose.connect(process.env.MANGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+mongoose.connect("mongodb+srv://sureshpyla2000:suresh123@chatvia-db.qvrm4e1.mongodb.net/?retryWrites=true&w=majority&appName=chatvia-db" , { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
     app.listen(PORT, ()=>{
         console.log(`server running at : ${PORT}`)
         console.log("Db Connected")
