@@ -7,13 +7,16 @@ require('dotenv').config()
 
 const app =express()
 
-app.use(cors({
-    origin : process.env.FRONTEND_URL,
-    credentials:true
-}))
+// app.use(cors({
+//     origin : process.env.FRONTEND_URL,
+//     credentials:true
+// }))
 
 app.use(bodyparser.json());
-app.use(bodyparser());
+// app.use(bodyparser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3001'], 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -30,7 +33,7 @@ app.get('/', (req,res)=>{
     })
 })
 
-mongoose.connect(process.env.MANGODB_URI).then(()=>{
+mongoose.connect(process.env.MANGODB_URI , { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
     app.listen(PORT, ()=>{
         console.log(`server running at : ${PORT}`)
         console.log("Db Connected")
