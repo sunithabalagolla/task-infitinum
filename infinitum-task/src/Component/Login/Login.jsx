@@ -31,7 +31,7 @@ const Login = () => {
     e.preventDefault();
     console.log(data);
    try {
-    const res = await axios.post("http://localhost:5000/auth/login", data);
+    const res = await axios.post("https://photography-server-tawny.vercel.app/auth/login", data);
     console.log(res.data ,"from login")
     if (res.data != undefined) {
       setShowEmailPasswordErrMsg(false);

@@ -27,7 +27,7 @@ const Register = () => {
     e.preventDefault();
     console.log(data);
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", data);
+      const res = await axios.post("https://photography-server-tawny.vercel.app/auth/register", data);
       console.log(res);
       navigate('/')
     } catch (error) {

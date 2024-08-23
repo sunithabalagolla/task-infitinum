@@ -26,7 +26,7 @@ const Contactus = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
    try {
-    const response = await axios.post("http://localhost:5000/contactus/contactus",data);
+    const response = await axios.post("https://photography-server-tawny.vercel.app/contactus/contactus",data);
     console.log(response.data,"from contactdb");
     window.location.reload();
    } catch (error) {

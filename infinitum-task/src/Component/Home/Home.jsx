@@ -36,7 +36,7 @@ const Home = () => {
 
   const fetchImageData = async()=>{
     try {
-      const res = await axios.get("http://localhost:5000/file/getimage")
+      const res = await axios.get("https://photography-server-tawny.vercel.app/file/getimage")
       console.log(res.data,"from dbimages")
       setImages(res.data)
     } catch (error) {
