@@ -1,27 +1,28 @@
-const mangoose = require("mongoose")
+// Model/FileModel.js
 
-const FileSchema = new mangoose.Schema({
-    
-    Image :{
-        type: String,
-        
-    },
+const mongoose = require("mongoose");
+
+const FileSchema = new mongoose.Schema({
+    Images: [{
+        type: String, 
+        required: true  
+    }],
     Description: {
-        type : String,
+        type: String,
+        required: true  
     },
-    UploaderName:{
-        type: String
+    UploaderName: {
+        type: String,
+        required: true  
     },
-    UploaderId:{
-        type: String
+    UploaderId: {
+        type: String,
+        required: true  
     }
-}
-,{
-    timestamps :true
-}
-)
+}, {
+    timestamps: true
+});
 
-const FileModel = mangoose.model('photogrphyImages', FileSchema)
+const FileModel = mongoose.model('PhotographyImages', FileSchema);
 
 module.exports = FileModel;
-

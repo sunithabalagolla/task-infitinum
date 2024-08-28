@@ -39,22 +39,33 @@ const EventList = () => {
     }
   };
 
+  // Helper function to determine if the URL is a video
+  const isVideo = (url) => {
+    return url &&  url.match(/\.(mp4|webm|ogg)$/i);
+  };
+
   return (
     <div>
       <div className="container">
         <div className='event-list'>
           <h1>Events List</h1>
-          <div className='list-conatainer'>
+          <div className='list-container'>
             <div className='row w-100'>
               {images.length > 0 ? (
                 images.map((item, index) => (
                   <div className="col-lg-12 col-sm-12" key={index}>
                     <div className="event-item mb-3">
                       <div className='d-flex flex-wrap justify-content-center align-items-center'>
-                        <img width={50} src={item.Image} alt="" />
+                        {isVideo(item.Images[0]) ? (
+                          <video width={100} src={item.Images[0]} controls></video>
+                        ) : (
+                          <img width={100} src={item.Images[0]} alt="" />
+                        )}
                         <h6 className='m-3'>{item.Description}</h6>
                       </div>
-                      <button onClick={()=>navigate(`upload-view/${user?.username}/${user?._id}/${item._id}`)} className= ' m-3 btn btn-warning'>
+                      <button 
+                        onClick={() => navigate(`/upload-view/${user?.username}/${user?._id}/${item._id}`)} 
+                        className='m-3 btn btn-warning'>
                         View More
                       </button>
                     </div>
@@ -65,7 +76,7 @@ const EventList = () => {
               )}
             </div>
           </div>
-          <a className="btn add-event-button" type="submit" href="/upload-form">Add Events</a>
+          <a className="btn add-event-button" href="/upload-form">Add Events</a>
         </div>
       </div>
     </div>

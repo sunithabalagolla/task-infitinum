@@ -7,25 +7,25 @@ const EditEvent = () => {
   const { user, images } = useContext(UserContext);
   const { userName, userId, imageId } = useParams();
   const [data, setData] = useState({
-    Image: "",
+    Images: [],  // Changed to 'Images' to match the existing field name
     Description: "",
     UploaderId: userId || "",
-    imageId:""
+    imageId: imageId || ""
   });
   const [isLoading, setIsLoading] = useState(false); 
-  const [imagePreview, setImagePreview] = useState(null); 
+  const [imagePreview, setImagePreview] = useState([]); 
   const navigate = useNavigate();
 
   useEffect(() => {
     const filterData = images.find((item) => item._id === imageId);
     if (filterData) {
       setData({
-        Image: filterData.Image,
+        Images: filterData.Images,
         Description: filterData.Description,
         UploaderId: userId,
-        imageId:imageId
+        imageId: imageId
       });
-      setImagePreview(filterData.Image); 
+      setImagePreview(filterData.Images);
     }
   }, [images, imageId, userId]);
 
@@ -33,18 +33,48 @@ const EditEvent = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const loadImage = (event) => {
-    var reader = new FileReader();
-    reader.onload = function () {
-      setData({ ...data, Image: reader.result });
-    };
-    reader.readAsDataURL(event.target.files[0]);
+  const loadImage = async (event) => {
+    const files = event.target.files;
+    const mediaArray = [...data.Images];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const formData = new FormData();
+
+      formData.append("file", file);
+      formData.append("upload_preset", "infinitum-task");
+      formData.append("cloud_name", "dhr4xnftl");
+
+      // Check the file type
+      const fileType = file.type.split('/')[0];
+      const uploadEndpoint = fileType === 'video' 
+        ? "https://api.cloudinary.com/v1_1/dhr4xnftl/video/upload" 
+        : "https://api.cloudinary.com/v1_1/dhr4xnftl/image/upload";
+
+      try {
+        const res = await axios.post(uploadEndpoint, formData);
+        mediaArray.push(res.data.secure_url);
+      } catch (error) {
+        console.error("Error uploading media to Cloudinary:", error);
+      }
+    }
+
+    setData({ ...data, Images: mediaArray });
+  };
+
+  const handleDeleteImage = (index) => {
+    const updatedImages = data.Images.filter((_, i) => i !== index);
+    setData({ ...data, Images: updatedImages });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); 
     try {
+      // const res = await axios.post("https://photography-server-tawny.vercel.app/file/updateimage", {
+      //   imageId,
+      //   ...data
+      // });
       const res = await axios.post("https://photography-server-tawny.vercel.app/file/updateimage", {
         imageId,
         ...data
@@ -54,7 +84,7 @@ const EditEvent = () => {
       window.location.reload();
     } catch (error) {
       console.log(error);
-    }finally {
+    } finally {
       setIsLoading(false); 
     }
   };
@@ -69,12 +99,33 @@ const EditEvent = () => {
             <div className="input-group mb-2">
               <input
                 type="file"
-                name="Image"
+                multiple
+                name="Images"
                 onChange={loadImage}
                 id="inlineFormInputGroup"
               />
             </div>
-            {imagePreview && <img src={data.Image} alt="Current" width="100" />} 
+            {imagePreview && data.Images.map((item, index) => (
+              <div key={index} style={{ position: 'relative' }}>
+                <img src={item} alt="Current" width="100" />
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(index)}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    width:"100px",
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  ❌
+                </button>
+              </div>
+            ))}
           </div>
           <div className="col-auto">
             <label style={{color:"black"}} className="sr-only" htmlFor="inlineFormInputGroup">Title</label>

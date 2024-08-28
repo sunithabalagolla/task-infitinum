@@ -10,10 +10,9 @@ const MediaView = () => {
   const { images } = useContext(UserContext);
   const [filteredData, setFilteredData] = useState([]);
   const [copy, setCopy] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const filterData = images.filter((item) => item._id === imageId);
@@ -22,18 +21,36 @@ const MediaView = () => {
 
   const deleteImage = async (id) => {
     setIsLoading(true);
+    console.log("sureshhhh", id);
     try {
       const imageid = id;
       await axios.post("https://photography-server-tawny.vercel.app/file/deleteimage", { imageid });
       window.location.reload();
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   };
 
-  
+  const renderMedia = (mediaUrl) => {
+    const fileExtension = mediaUrl.split('.').pop().toLowerCase();
+
+    if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
+      return (
+        <video className='mt-2' height={150} width={200} controls>
+          <source src={mediaUrl} type={`video/${fileExtension}`} />
+          Your browser does not support the video tag.
+        </video>
+      );
+    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+      return (
+        <img className='mt-2' height={150} width={200} src={mediaUrl} alt="" />
+      );
+    } else {
+      return <p>Unsupported media format.</p>;
+    }
+  };
 
   return (
     <div className='upload-form'>
@@ -44,11 +61,15 @@ const MediaView = () => {
               <h6>Title: {item.Description}</h6>
             </div>
             <div className='card-body'>
-              <img width={300} src={item.Image} alt="" />
+              {item.Images && item.Images.map((mediaUrl, index) => (
+                <div className='col-lg-4 col-md-6 col-sm-6' key={index}>
+                  {renderMedia(mediaUrl)}
+                </div>
+              ))}
               <div className='card-footer'>
                 <h6>UploaderName: <span className='text-success'>{userName}</span></h6>
                 <div className='mt-3'>
-                  <button className='btn ms-1 btn-primary' onClick={()=>navigate(`/edit-media/${userName}/${userId}/${imageId}`)}>Edit</button>
+                  <button className='btn ms-1 btn-primary' onClick={() => navigate(`/edit-media/${userName}/${userId}/${imageId}`)}>Edit</button>
                   <button className='btn ms-1 btn-success' type="button" data-bs-toggle="modal" data-bs-target="#copyModal">
                     Share
                   </button>
@@ -68,9 +89,16 @@ const MediaView = () => {
                           <h5>Are you sure to delete this event?</h5> 😐
                         </div>
                         <div className="modal-footer">
-                          <button onClick={() => deleteImage(item._id)} type="button" className="btn btn-danger">{isLoading ? <div><div class="spinner-border spinner-border-sm me-3" role="status">
-  <span class="visually-hidden"></span>
-</div>Deleting...</div>  :  "✔️ Yes"}</button>
+                          <button onClick={() => deleteImage(item._id)} type="button" className="btn btn-danger">
+                            {isLoading ? 
+                              <div>
+                                <div className="spinner-border spinner-border-sm me-3" role="status">
+                                  <span className="visually-hidden"></span>
+                                </div>
+                                Deleting...
+                              </div> 
+                              : "✔️ Yes"}
+                          </button>
                           <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">❌ No</button>
                         </div>
                       </div>
@@ -88,6 +116,7 @@ const MediaView = () => {
                         <div className="modal-body">
                           Click to Copy the Link
                           <CopyToClipboard text={`https://photography-client-six.vercel.app/upload-copy-view/${userName}/${userId}/${imageId}`}>
+                          
                             <button className='btn ms-2 border-success' onClick={() => {
                               setCopy(true);
                               setTimeout(() => setCopy(false), 2000);

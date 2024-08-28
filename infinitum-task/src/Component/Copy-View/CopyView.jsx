@@ -14,11 +14,12 @@ const CopyView = () => {
   
     useEffect(() => {
       const filterData = images.filter((item) => item._id === imageId);
+
       setFilteredData(filterData);
     }, [images, imageId]);
 
+    
 
-    console.log("suresh",images)
 
 
     useEffect(() => {
@@ -37,6 +38,25 @@ const CopyView = () => {
         }
       };
   
+
+      const renderMedia = (mediaUrl) => {
+        const fileExtension = mediaUrl.split('.').pop().toLowerCase();
+    
+        if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
+          return (
+            <video className='mt-2' height={150} width={200} controls>
+              <source src={mediaUrl} type={`video/${fileExtension}`} />
+              Your browser does not support the video tag.
+            </video>
+          );
+        } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+          return (
+            <img className='mt-2' height={150} width={200} src={mediaUrl} alt="" />
+          );
+        } else {
+          return <p>Unsupported media format.</p>;
+        }
+      };
     
 
   return (
@@ -51,7 +71,11 @@ const CopyView = () => {
               <h6>Title: {item.Description}</h6>
             </div>
             <div className='card-body'>
-              <img src={item.Image} alt="" />
+            {item.Images && item.Images.map((mediaUrl, index) => (
+                <div className='col-lg-4 col-md-6 col-sm-6' key={index}>
+                  {renderMedia(mediaUrl)}
+                </div>
+              ))}
               <div className='card-footer'>
                 <h5>UploaderName: <span className='text-danger'>{userName}</span></h5>
                 <div className='mt-5'>
