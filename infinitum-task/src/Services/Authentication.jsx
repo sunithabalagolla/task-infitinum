@@ -6,7 +6,6 @@ const Aunthentication = (props) => {
   const routerlocation = useLocation();
 
   if (
-    routerlocation.pathname == "/" ||
     routerlocation.pathname == "/login" ||
     routerlocation.pathname == "/register"
   ) {

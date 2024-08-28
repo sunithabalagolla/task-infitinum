@@ -1,0 +1,44 @@
+.event-list{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+}
+.list-conatainer{
+    display: flex;
+    border: 3px solid rgba(226, 52, 100,0.3);
+    border-radius: 10px;
+    height: 60%;
+    justify-content: center;
+    padding: 20px;
+    width: 60%;
+    align-items: center;
+}
+
+.add-event-button{
+    background-color: rgb(226, 52, 100);
+    border: none;
+    color: #fff;
+    margin-top: 20px;
+    padding: 15px;
+    text-decoration: none;
+}
+.add-event-button:hover{
+    color: white;
+}
+.upload-form{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: center;
+}
+.event-item{
+    display: flex;
+    border: 2px solid #f0f0f0;
+    width: 100%;
+    padding: 10px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}

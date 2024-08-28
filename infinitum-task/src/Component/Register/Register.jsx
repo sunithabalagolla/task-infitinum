@@ -17,6 +17,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const [data, setData] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false); 
 
 
   const handleChange = (e) => {
@@ -25,13 +26,16 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); 
     console.log(data);
     try {
       const res = await axios.post("https://photography-server-tawny.vercel.app/auth/register", data);
       console.log(res);
-      navigate('/')
+      navigate('/login')
     } catch (error) {
       console.log(error);
+    }finally {
+      setIsLoading(false); 
     }
 
     
@@ -63,7 +67,7 @@ const Register = () => {
                   </div>
                   <input
                     type="text"
-                    class=""
+                    class="form-control"
                     required
                     name="email"
                     value={data.email}
@@ -85,7 +89,7 @@ const Register = () => {
                   </div>
                   <input
                     type="text"
-                    class=""
+                    class="form-control"
                     id="inlineFormInputGroup"
                     required
                     name="username"
@@ -107,7 +111,7 @@ const Register = () => {
                   </div>
                   <input
                     type="password"
-                    class=""
+                    class="form-control"
                     id="inlineFormInputGroup"
                     required
                     name="password"
@@ -118,8 +122,10 @@ const Register = () => {
                 </div>
               </div>
 
-              <button type="submit" >
-                Register
+              <button type="submit" disabled={isLoading} >
+              {isLoading ? <div><div class="spinner-border spinner-border-sm me-3" role="status">
+  <span class="visually-hidden"></span>
+</div>Signing Up...</div>  :  "Sign Up"}
               </button>
 
               <div className="register-terms">

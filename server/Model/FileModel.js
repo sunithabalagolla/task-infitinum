@@ -8,8 +8,12 @@ const FileSchema = new mangoose.Schema({
     },
     Description: {
         type : String,
-        
-
+    },
+    UploaderName:{
+        type: String
+    },
+    UploaderId:{
+        type: String
     }
 }
 ,{
