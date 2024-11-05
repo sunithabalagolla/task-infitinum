@@ -10,7 +10,7 @@ const tarnsporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.EMAIL,
-        pass: 'scsm mgis azzn dhqi'
+        pass: 'azhs pdeg wwip kzkm'
     }
 })
 

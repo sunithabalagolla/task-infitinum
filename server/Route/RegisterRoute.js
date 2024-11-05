@@ -7,7 +7,10 @@ const bcrypt = require("bcryptjs");
 const router =express.Router();
 
 router.post('/register', async (req, res) => {
+
     const { email, username, password } = req.body;
+
+    console.log(req.body,"user details");
 
       if(!email || !username || !password){
         res.status(400).json("all fields are required");

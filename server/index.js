@@ -24,8 +24,9 @@ app.get('/', (req,res)=>{
         message :"server runnning at " + PORT
     })
 })
+// mongodb+srv://sunithabalagolla:sunithabalagolla@cluster0.mr0bwxg.mongodb.net/infitinum?retryWrites=true&w=majority&appName=infitinum
 
-mongoose.connect("mongodb+srv://sureshpyla2000:suresh123@chatvia-db.qvrm4e1.mongodb.net/?retryWrites=true&w=majority&appName=chatvia-db" , { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+mongoose.connect("mongodb+srv://sunithabalagolla:sunithabalagolla@cluster0.mr0bwxg.mongodb.net/infitinum?retryWrites=true&w=majority&appName=infitinum" , { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
     app.listen(PORT, ()=>{
         console.log(`server running at : ${PORT}`)
         console.log("Db Connected")

@@ -1,129 +1,112 @@
-.chatvia-register-form input{
-
-    border: 1px solid #f0f0f0;
-    border-radius: 5px;
-    width: 370px;
-    height: 50px;
-    padding-left: 15px;
-}
-
-.register{
-    background-image: url(https://www.24mm.in/uploads/54aea6b15fe93da76690ebb7097b85ac.jpeg);
-    background-position:  center right;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;  
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.chatvia-register-form input:focus-visible {
-    outline: 1px solid rgb(226, 52, 100);
-}
-
-.chatvia-register-form {
-    background-color: rgba(255,255,255,0.2);
-    padding: 35px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px;
-    border-radius: 5px;
-    
-}
-
-.chatvia-register-form form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.chatvia-register-form button {
-    border: none;
+    background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0'); /* Photography background */
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.8);
+  }
+  
+  .register-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 40px;
     width: 100%;
-    padding: 7px 0px;
-    margin-top:20px ;
+    max-width: 400px;
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .register-form {
+    margin-top: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .input-container {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .form-control {
+    padding: 10px 40px;
+    border: 1px solid #ccc;
     border-radius: 5px;
+    width: 100%;
+    transition: border-color 0.3s;
+  }
+  
+  .form-control:focus {
+    border-color: rgb(226, 52, 100);
+    outline: none;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 10px;
     background-color: rgb(226, 52, 100);
     color: white;
-}
-
-.chatvia-register-form label{
-    margin-bottom: 5px;
-    font-weight:500;
-    font-size: 12px;
-    color: white;
-}
-.chatvia-register-form input::placeholder{
-    font-size: 13px;
-   
-}
-.chatvia-registeration{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.input-group-text{
-    padding: 14px;
-    border: 1px solid #f0f0f0;
-}
-.chatvia-logo img {
-    width: 150px;
-    margin-bottom:40px ;
-    margin-top: 100px;
-}
-.chatvia-register-header{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.chatvia-register-header div:nth-child(1){
-    font-size: 23px;
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: #fff;
-}
-
-.chatvia-register-header div:nth-child(2){
-color: #7a7f9a;
-font-weight: 500;
-margin-bottom: 30px;
-}
-body{
-    background-color: #f4f4f9;
-    /* background-color: #f5f9fb; */
-}
-
-.register-terms{
-    color: #7a7f9a;
-    margin-top: 20px;
-    font-size: 14px;
-    font-weight: 500;
-}
-.register-terms span{
-    color: rgb(226, 52, 100);
-    margin-top: 20px; 
-}
-.register-signin{
-    font-weight: 400;
-    color:#7a7f9a ;
-}
-.forgotpassword{
-    font-size: 12px;
-    font-weight: 500;
-    color:#7a7f9a ;
-}
-
-@media screen and (max-width: 400px) {
-    .chatvia-register-form {
-        padding: 20px !important;
-    }
-    
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
   }
-
+  
+  .submit-button:hover {
+    background-color: rgb(200, 40, 90);
+  }
+  
+  .register-terms {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .register-signin {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .register-signin span {
+    color: rgb(226, 52, 100);
+    text-decoration: none;
+  }
+  
+  .register-signin span:hover {
+    text-decoration: underline;
+  }
+  
+  .loading {
+    display: flex;
+    align-items: center;
+  }
+  
+  .spinner-border {
+    margin-right: 5px;
+  }
+  

@@ -53,8 +53,7 @@ const UploadForm = () => {
       formData.append("file", file);
       formData.append("upload_preset", "infinitum-task");
       formData.append("cloud_name", "dhr4xnftl");
-
-      // Check the file typef
+     
       const fileType = file.type.split('/')[0];
       
       const uploadEndpoint = fileType === 'video' 
@@ -78,7 +77,7 @@ const UploadForm = () => {
     setIsLoading(true); 
 
     try {
-      const res = await axios.post("https://photography-server-tawny.vercel.app/file/uploadimage", data);
+      const res = await axios.post("http://localhost:5000/file/uploadimage", data);
       console.log(res);
       navigate("/");
       window.location.reload();

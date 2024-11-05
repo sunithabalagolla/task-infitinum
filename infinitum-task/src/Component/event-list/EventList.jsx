@@ -27,57 +27,59 @@ const EventList = () => {
     if (user?._id) {  
       fetchImageData();
     }
-  }, [user]);  
+  }, [user]);
 
   const fetchImageData = async () => {
     try {
-      const res = await axios.get(`https://photography-server-tawny.vercel.app/file/getimage/${user._id}`);
-      console.log(res.data, "from dbimages");
+      const res = await axios.get(`http://localhost:5000/file/getimage/${user._id}`);
       setImages(res.data);
     } catch (error) {
       console.error("Error fetching images:", error);
     }
   };
 
-  // Helper function to determine if the URL is a video
   const isVideo = (url) => {
-    return url &&  url.match(/\.(mp4|webm|ogg)$/i);
+    return url && url.match(/\.(mp4|webm|ogg)$/i);
   };
 
   return (
-    <div>
-      <div className="container">
-        <div className='event-list'>
-          <h1>Events List</h1>
-          <div className='list-container'>
-            <div className='row w-100'>
-              {images.length > 0 ? (
-                images.map((item, index) => (
-                  <div className="col-lg-12 col-sm-12" key={index}>
-                    <div className="event-item mb-3">
-                      <div className='d-flex flex-wrap justify-content-center align-items-center'>
-                        {isVideo(item.Images[0]) ? (
-                          <video width={100} src={item.Images[0]} controls></video>
-                        ) : (
-                          <img width={100} src={item.Images[0]} alt="" />
-                        )}
-                        <h6 className='m-3'>{item.Description}</h6>
-                      </div>
-                      <button 
-                        onClick={() => navigate(`/upload-view/${user?.username}/${user?._id}/${item._id}`)} 
-                        className='m-3 btn btn-warning'>
-                        View More
-                      </button>
+    <div className="container">
+      <div className="gallery-showcase">
+        <h1>Gallery Showcase</h1>
+        <h2>Capture Life's Moments</h2>
+        <p className="photography-intro">
+          Welcome to our photography page! Explore our collection of beautiful moments captured through photos and videos.
+        </p>
+        
+        <div className="list-container">
+          <div className="row w-100">
+            {images.length > 0 ? (
+              images.map((item, index) => (
+                <div className="col-lg-12 col-sm-12" key={index}>
+                  <div className="event-item mb-3">
+                    <div className="d-flex flex-wrap justify-content-center align-items-center">
+                      {isVideo(item.Images[0]) ? (
+                        <video width={100} src={item.Images[0]} controls></video>
+                      ) : (
+                        <img width={100} src={item.Images[0]} alt="Event Thumbnail" />
+                      )}
+                      <h6 className="m-3">{item.Description}</h6>
                     </div>
+                    <button 
+                      onClick={() => navigate(`/upload-view/${user?.username}/${user?._id}/${item._id}`)} 
+                      className="view-more-button">
+                      View More
+                    </button>
                   </div>
-                ))
-              ) : (
-                <h1>No Events</h1>
-              )}
-            </div>
+                </div>
+              ))
+            ) : (
+              <h1>No Events</h1>
+            )}
           </div>
-          <a className="btn add-event-button" href="/upload-form">Add Events</a>
         </div>
+        
+        <a className="btn add-event-button" href="/upload-form">Add Events</a>
       </div>
     </div>
   );

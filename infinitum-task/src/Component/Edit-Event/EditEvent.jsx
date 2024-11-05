@@ -2,18 +2,19 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../Services/CreateContext';
+import './EditEvent.css';
 
 const EditEvent = () => {
   const { user, images } = useContext(UserContext);
   const { userName, userId, imageId } = useParams();
   const [data, setData] = useState({
-    Images: [],  // Changed to 'Images' to match the existing field name
+    Images: [],  
     Description: "",
     UploaderId: userId || "",
     imageId: imageId || ""
   });
-  const [isLoading, setIsLoading] = useState(false); 
-  const [imagePreview, setImagePreview] = useState([]); 
+  const [isLoading, setIsLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,10 +46,9 @@ const EditEvent = () => {
       formData.append("upload_preset", "infinitum-task");
       formData.append("cloud_name", "dhr4xnftl");
 
-      // Check the file type
       const fileType = file.type.split('/')[0];
-      const uploadEndpoint = fileType === 'video' 
-        ? "https://api.cloudinary.com/v1_1/dhr4xnftl/video/upload" 
+      const uploadEndpoint = fileType === 'video'
+        ? "https://api.cloudinary.com/v1_1/dhr4xnftl/video/upload"
         : "https://api.cloudinary.com/v1_1/dhr4xnftl/image/upload";
 
       try {
@@ -69,13 +69,9 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
-      // const res = await axios.post("https://photography-server-tawny.vercel.app/file/updateimage", {
-      //   imageId,
-      //   ...data
-      // });
-      const res = await axios.post("https://photography-server-tawny.vercel.app/file/updateimage", {
+      const res = await axios.post("http://localhost:5000/file/updateimage", {
         imageId,
         ...data
       });
@@ -85,7 +81,7 @@ const EditEvent = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -94,60 +90,56 @@ const EditEvent = () => {
       <h1>Edit Media</h1>
       <div className="chatvia-register-form animate__animated animate__backInLeft">
         <form onSubmit={handleSubmit}>
-          <div className="col-auto">
-            <label style={{color:"black"}} className="sr-only" htmlFor="inlineFormInputGroup">Image</label>
-            <div className="input-group mb-2">
-              <input
-                type="file"
-                multiple
-                name="Images"
-                onChange={loadImage}
-                id="inlineFormInputGroup"
-              />
-            </div>
+          <div className="input-group">
+            <label htmlFor="upload">Upload Image</label>
+            <input
+              type="file"
+              multiple
+              name="Images"
+              onChange={loadImage}
+              id="upload"
+            />
+          </div>
+          <div className="image-preview-container">
             {imagePreview && data.Images.map((item, index) => (
-              <div key={index} style={{ position: 'relative' }}>
-                <img src={item} alt="Current" width="100" />
+              <div key={index} className="image-preview-item">
+                <img src={item} alt="Preview" />
                 <button
                   type="button"
+                  className="delete-image-btn"
                   onClick={() => handleDeleteImage(index)}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    backgroundColor: 'white',
-                    width:"100px",
-                    color: 'white',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
                 >
                   ❌
                 </button>
               </div>
             ))}
           </div>
-          <div className="col-auto">
-            <label style={{color:"black"}} className="sr-only" htmlFor="inlineFormInputGroup">Title</label>
-            <div className="input-group mb-2">
-              <input
-                type="text"
-                id="inlineFormInputGroup"
-                required
-                value={data.Description}
-                name="Description"
-                onChange={handleChange}
-                placeholder="Enter Title"
-              />
-            </div>
+          <div className="input-group">
+            <label htmlFor="description">Title</label>
+            <input
+              type="text"
+              id="description"
+              required
+              value={data.Description}
+              name="Description"
+              onChange={handleChange}
+              placeholder="Enter Title"
+            />
           </div>
-          <button type="submit">{isLoading ? <div><div class="spinner-border spinner-border-sm me-3" role="status">
-  <span class="visually-hidden"></span>
-</div>Updating Media...</div>  :  "Update Media"}</button>
+          <button type="submit" className="submit-btn">
+            {isLoading ? (
+              <div>
+                <div className="spinner-border spinner-border-sm me-3" role="status">
+                  <span className="visually-hidden"></span>
+                </div>
+                Updating Media...
+              </div>
+            ) : "Update Media"}
+          </button>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default EditEvent;

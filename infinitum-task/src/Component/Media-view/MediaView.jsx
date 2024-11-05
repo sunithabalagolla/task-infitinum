@@ -4,143 +4,149 @@ import { UserContext } from '../../Services/CreateContext';
 import axios from 'axios';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import './MediaView.css';
 
 const MediaView = () => {
   const { userName, userId, imageId } = useParams();
   const { images } = useContext(UserContext);
-  const [filteredData, setFilteredData] = useState([]);
-  const [copy, setCopy] = useState(false);
+  const [mediaData, setMediaData] = useState([]);
+  const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const filterData = images.filter((item) => item._id === imageId);
-    setFilteredData(filterData);
+    const fetchData = images.filter((item) => item._id === imageId);
+    setMediaData(fetchData);
   }, [images, imageId]);
 
-  const deleteImage = async (id) => {
+  const handleDeleteMedia = async (id) => {
     setIsLoading(true);
-    console.log("sureshhhh", id);
     try {
-      const imageid = id;
-      await axios.post("https://photography-server-tawny.vercel.app/file/deleteimage", { imageid });
+      await axios.post("http://localhost:5000/file/deleteimage", { imageid: id });
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting image:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderMedia = (mediaUrl) => {
-    const fileExtension = mediaUrl.split('.').pop().toLowerCase();
-
-    if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
+  const renderMediaItem = (url) => {
+    const fileType = url.split('.').pop().toLowerCase();
+    if (['mp4', 'webm', 'ogg'].includes(fileType)) {
       return (
-        <video className='mt-2' height={150} width={200} controls>
-          <source src={mediaUrl} type={`video/${fileExtension}`} />
+        <video className='media-item' controls>
+          <source src={url} type={`video/${fileType}`} />
           Your browser does not support the video tag.
         </video>
       );
-    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-      return (
-        <img className='mt-2' height={150} width={200} src={mediaUrl} alt="" />
-      );
+    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
+      return <img className='media-item' src={url} alt="Media" />;
     } else {
       return <p>Unsupported media format.</p>;
     }
   };
 
   return (
-    <div className='upload-form'>
-      {filteredData.length > 0 ? (
-        filteredData.map((item, index) => (
-          <div className='card' key={index}>
-            <div className="card-header">
-              <h6>Title: {item.Description}</h6>
+    <div className='media-container'>
+      {mediaData.length > 0 ? (
+        mediaData.map((item, index) => (
+          <div className='media-card' key={index}>
+            <div className="media-card-header">
+              <h4>{item.Description || "Untitled Media"}</h4>
             </div>
-            <div className='card-body'>
-              {item.Images && item.Images.map((mediaUrl, index) => (
-                <div className='col-lg-4 col-md-6 col-sm-6' key={index}>
-                  {renderMedia(mediaUrl)}
-                </div>
-              ))}
-              <div className='card-footer'>
-                <h6>UploaderName: <span className='text-success'>{userName}</span></h6>
-                <div className='mt-3'>
-                  <button className='btn ms-1 btn-primary' onClick={() => navigate(`/edit-media/${userName}/${userId}/${imageId}`)}>Edit</button>
-                  <button className='btn ms-1 btn-success' type="button" data-bs-toggle="modal" data-bs-target="#copyModal">
-                    Share
-                  </button>
-                  <button type="button" className='btn ms-1 btn-danger' data-bs-toggle="modal" data-bs-target="#deleteModal">
-                    Delete
-                  </button>
-
-                  {/* Delete Modal */}
-                  <div className="modal fade" id="deleteModal" tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h1 className="modal-title fs-5" id="deleteModalLabel">Delete</h1>
-                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                          <h5>Are you sure to delete this event?</h5> 😐
-                        </div>
-                        <div className="modal-footer">
-                          <button onClick={() => deleteImage(item._id)} type="button" className="btn btn-danger">
-                            {isLoading ? 
-                              <div>
-                                <div className="spinner-border spinner-border-sm me-3" role="status">
-                                  <span className="visually-hidden"></span>
-                                </div>
-                                Deleting...
-                              </div> 
-                              : "✔️ Yes"}
-                          </button>
-                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">❌ No</button>
-                        </div>
-                      </div>
-                    </div>
+            <div className='media-card-body'>
+              <div className="media-grid">
+                {item.Images && item.Images.map((url, index) => (
+                  <div className='media-item-container' key={index}>
+                    {renderMediaItem(url)}
                   </div>
-
-                  {/* Copy Modal */}
-                  <div className="modal fade" id="copyModal" tabIndex="-1" aria-labelledby="copyModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h1 className="modal-title fs-5" id="copyModalLabel">Copy</h1>
-                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                          Click to Copy the Link
-                          <CopyToClipboard text={`https://photography-client-six.vercel.app/upload-copy-view/${userName}/${userId}/${imageId}`}>
-                          
-                            <button className='btn ms-2 border-success' onClick={() => {
-                              setCopy(true);
-                              setTimeout(() => setCopy(false), 2000);
-                            }}>
-                              <ContentCopyIcon />
-                            </button>
-                          </CopyToClipboard>
-                          {copy && <div className=' ms-3 btn text-success'>Copied</div>}
-                        </div>
-                        <div className="modal-footer">
-                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">❌ Close</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                ))}
+              </div>
+              <div className='media-card-footer'>
+                <h6>Uploaded By: <span className='uploader-name'>{userName}</span></h6>
+                <div className='media-actions'>
+                  <button 
+                    className='btn btn-primary' 
+                    onClick={() => navigate(`/edit-media/${userName}/${userId}/${imageId}`)}>
+                    Edit Media
+                  </button>
+                  <button 
+                    className='btn btn-success' 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#shareModal">
+                    Share Link
+                  </button>
+                  <button 
+                    className='btn btn-danger' 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#confirmDeleteModal">
+                    Delete Media
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         ))
       ) : (
-        <h1>No image found.</h1>
+        <h2>No media available.</h2>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <div className="modal fade" id="confirmDeleteModal" tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <p>Are you sure you want to delete this media item?</p>
+            </div>
+            <div className="modal-footer">
+              <button 
+                onClick={() => handleDeleteMedia(mediaData[0]._id)} 
+                type="button" 
+                className="btn btn-danger">
+                {isLoading ? 
+                  <span><span className="spinner-border spinner-border-sm me-2"></span>Deleting...</span> 
+                  : "Yes, Delete"}
+              </button>
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Share Link Modal */}
+      <div className="modal fade" id="shareModal" tabIndex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="shareModalLabel">Share Media Link</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              <p>Click the button below to copy the shareable link:</p>
+              <CopyToClipboard text={`http://localhost:5000/upload-copy-view/${userName}/${userId}/${imageId}`}>
+                <button 
+                  className='btn btn-outline-success' 
+                  onClick={() => {
+                    setIsCopied(true);
+                    setTimeout(() => setIsCopied(false), 2000);
+                  }}>
+                  <ContentCopyIcon /> Copy Link
+                </button>
+              </CopyToClipboard>
+              {isCopied && <span className='copied-feedback text-success'>Link copied to clipboard!</span>}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
